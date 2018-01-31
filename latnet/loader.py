@@ -15,7 +15,10 @@ class Loader(object):
 		"""reads in file and executes it as a query"""
 		with open(query_file,'r') as f:
 			query=f.read()
-		self.cur.execute(query)
+		self.cur.execute(query,args)
+
+	def __iter__(self):
+		return self
 
 	def __next__(self):
 		self.cur.fetchone()

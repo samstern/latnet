@@ -34,12 +34,29 @@ class TopicExtractor(Extractor):
 
 class LDAExtractor(TopicExtractor):
 	"""docstring for LDAExtractor"""
-	def __init__(self, num_topics=50):
+	def __init__(self, num_topics=50,eta=0.0001):
 		super(LDAExtractor, self).__init__()
 		self.num_topics = num_topics
 
 		self.tokenizer=RegexpTokenizer(r'\w+')
 		self.stemmer = SnowballStemmer("english")
 
+		self.stopless=[]
+
+		self.lda_model=None
+
 	def apply(self,text):
-		pass
+		tokenized=self.tokenizer.tokenize(text)
+		self.stopless.append([token for token in tokenized if token not in stopwords.words('english')])
+
+	def update(self):
+		bigram=models.phrases.Phrases(self.stopless)
+		dictionary = corpora.Dictionary(bigram[self.stopless])
+		corpus = [dictionary.doc2bow(text) for text in bigram[self.stopless]]
+		try:
+			self.lda_model.update(corpus)
+		except AttributeError:
+			num_tokens=len(dictionary.token2id)
+			etas=np.full([self.num_topics,num_tokens],eta)
+			self.lda_model=models.ldamodel.LdaModel(corpus=corpus,id2word=dictionary,num_topics=self.num_topics,alpha='auto',eta='auro',passes=5)
+		
