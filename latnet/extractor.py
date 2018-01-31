@@ -23,6 +23,63 @@ class SentimentExtractor(Extractor):
 	def apply(self,text):
 		pass
 
+class KeywordSentimentExtractor(SentimentExtractor):
+	"""docstring for KeywordSentimentExtractor"""
+	def __init__(self, keyword_file="../data/sentiment_keywords.json"):
+		super(KeywordSentimentExtractor, self).__init__()
+		with open(keyword_file,'r') as f:
+			keywords=json.load(f)
+			self.excitement_keywords=keywords['Excitement']
+			self.anxiety_keywords=keywords['Anxiety']
+
+	def apply(self,text):
+		emotion_count={'anxiety':0,'excitement':0,'net':0}
+		emotion_count['anxiety']+=countKeywords(article,self.anxiety_keywords)
+		emotion_count['excitement']+=countKeywords(article,self.excitement_keywords)
+		emotion_count['net']=netSentiment(emotion_count['anxiety'],emotion_count['excitement'],method='ratio')
+		return emotion_count
+
+def function(text,keywords,method="count"):
+	count=0
+	lower=text.lower()
+	for word in keywords:
+		if method=="count":
+			count+=lower.count(word)
+		elif method=="exists":
+			count+=(word in lower)
+		else:
+			raise ValueError("invalid argument for the 'method' parameter. Valid methods are 'count' and 'exists'.")
+		return count
+def netSentiment(anxiety,excitement,method="difference"):
+	if method=="difference":
+		"""hoe many more excitement words than there are anxiety words"""
+		return excitement-anxiety
+	elif method=="ratio":
+		"""the ratio of excitement words to anxiety words"""
+		try:
+			return double(excitement)/double(anxiety)
+		except ZeroDivisionError:
+			epsilon=0.0000001
+			ex_eps=excitement+epsilon
+			an_eps=anxiety+epsilon
+			return ex_eps/an_eps
+	elif method=="percent":
+		"""the percentage of emotive words that are excitement"""
+		try:
+			return double(excitement)/double(anxiety+excitement)
+		except ZeroDivisionError:
+			epsilon=0.0000001
+			ex_eps=excitement+epsilon
+			an_eps=anxiety+epsilon
+			return ex_eps/(an_eps+ex_eps)
+	else:
+		raise ValueError("invalid argument for the 'method' paramiter. Valid methods are 'difference'','ratio', and 'percent'")
+
+
+
+	pass
+
+
 
 class TopicExtractor(Extractor):
 	"""docstring for TopicExtractor"""
