@@ -21,4 +21,4 @@ class Loader(object):
 		return self
 
 	def __next__(self):
-		self.cur.fetchone()
+		return self.cur.fetchone()
