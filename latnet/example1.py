@@ -1,6 +1,7 @@
 from datetime import datetime,timedelta
 from builder import Builder
 from loader import Loader
+from extractor import LDAExtractor
 
 if __name__=="__main__":
 	start_date='08-08-2016'
@@ -11,7 +12,7 @@ if __name__=="__main__":
 	builder.addExtractor(LDAExtractor())
 	db_params={'dbname':'moreover','username':'sam','password':'s.stern'}
 	data=Loader(**db_params)
-	query_file="some/file/name"
+	query_file="simple query"
 
 	for date in date_list:
 		data.executeQuery(query_file,date)

@@ -1,0 +1,3 @@
+SELECT content, source
+FROM news
+limit 10;
