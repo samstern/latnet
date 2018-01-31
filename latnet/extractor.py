@@ -4,6 +4,7 @@ from nltk.tokenize import word_tokenize
 from nltk.tokenize import RegexpTokenizer
 from nltk.corpus import stopwords
 from nltk.stem.snowball import SnowballStemmer
+import json
 
 class Extractor(object):
 	"""docstring for Extractor"""
@@ -34,12 +35,12 @@ class KeywordSentimentExtractor(SentimentExtractor):
 
 	def apply(self,text):
 		emotion_count={'anxiety':0,'excitement':0,'net':0}
-		emotion_count['anxiety']+=countKeywords(article,self.anxiety_keywords)
-		emotion_count['excitement']+=countKeywords(article,self.excitement_keywords)
+		emotion_count['anxiety']+=countKeywords(text,self.anxiety_keywords)
+		emotion_count['excitement']+=countKeywords(text,self.excitement_keywords)
 		emotion_count['net']=netSentiment(emotion_count['anxiety'],emotion_count['excitement'],method='ratio')
 		return emotion_count
 
-def function(text,keywords,method="count"):
+def countKeywords(text,keywords,method="count"):
 	count=0
 	lower=text.lower()
 	for word in keywords:
@@ -50,6 +51,7 @@ def function(text,keywords,method="count"):
 		else:
 			raise ValueError("invalid argument for the 'method' parameter. Valid methods are 'count' and 'exists'.")
 		return count
+
 def netSentiment(anxiety,excitement,method="difference"):
 	if method=="difference":
 		"""hoe many more excitement words than there are anxiety words"""
@@ -57,7 +59,7 @@ def netSentiment(anxiety,excitement,method="difference"):
 	elif method=="ratio":
 		"""the ratio of excitement words to anxiety words"""
 		try:
-			return double(excitement)/double(anxiety)
+			return float(excitement)/float(anxiety)
 		except ZeroDivisionError:
 			epsilon=0.0000001
 			ex_eps=excitement+epsilon
@@ -66,7 +68,7 @@ def netSentiment(anxiety,excitement,method="difference"):
 	elif method=="percent":
 		"""the percentage of emotive words that are excitement"""
 		try:
-			return double(excitement)/double(anxiety+excitement)
+			return float(excitement)/float(anxiety+excitement)
 		except ZeroDivisionError:
 			epsilon=0.0000001
 			ex_eps=excitement+epsilon
