@@ -18,4 +18,3 @@ if __name__=="__main__":
 		data.executeQuery(query_file,date)
 		builder.process(data)
 
-	builder.process(data)

@@ -21,4 +21,15 @@ class Loader(object):
 		return self
 
 	def __next__(self):
+            out=self.cur.fetchone()
+            if out==None:
+                raise StopIteration
+            else:
 		return self.cur.fetchone()
+
+        def next(self):
+            out = self.__next__()
+            if out==None:
+                raise StopIteration
+            else:
+		return out
