@@ -123,7 +123,7 @@ class LDAExtractor(TopicExtractor):
         self.stemmer = SnowballStemmer("english")
 
         self.stopless = []
-        self.gs_dict = corpora.Dictionary()
+        self.dict = corpora.Dictionary()
 
         self.lda_model = None
 
@@ -132,9 +132,9 @@ class LDAExtractor(TopicExtractor):
         self.stopless.append(
             [token for token in tokenized if
              token not in stopwords.words('english')])
-        doc_bow = self.dict.doc2bow(text)
 
         try:
+            doc_bow = self.dict.doc2bow(text)
             return self.lda_model.get_document_topics(doc_bow)
         except AttributeError:
             return None
