@@ -12,11 +12,18 @@ class Builder(object):
 	def processText(self,text):
 		self.textProcessor.processText(text)
 
-	def process(self,in_data,agent_manager,agent_field_name=None,text_field_name='content'):
+	def process(self,in_data,agent_manager,agent_field_name=None,text_field_name='content',decode=True,lower=True):
 		"""Iterate through the data, identify the agents and update their attributes based on the contents of the texts"""
 		for item in in_data:
 			text=item[text_field_name]
+			
+			if decode: 
+				text=text.decode('utf-8','ignore')
+			if lower:
+				text=text.lower()
+
 			out_data=self.processText(text)
+
 			if agent_field_name is None:
 				#--TODO
 				#case where agents are extracted from the text and are therefore in the out_data
