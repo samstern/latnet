@@ -8,8 +8,8 @@ import json
 
 class Extractor(object):
 	"""docstring for Extractor"""
-	def __init__(self, arg):
-		self.arg = arg
+	def __init__(self):
+		pass
 	
 	def apply(self,text):
 		pass	
@@ -17,9 +17,8 @@ class Extractor(object):
 
 class SentimentExtractor(Extractor):
 	"""docstring for SentimentExtractor"""
-	def __init__(self, arg):
+	def __init__(self):
 		super(SentimentExtractor, self).__init__()
-		self.arg = arg
 
 	def apply(self,text):
 		pass

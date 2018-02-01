@@ -1,7 +1,9 @@
 from datetime import datetime,timedelta
 from builder import Builder
 from loader import Loader
-from extractor import LDAExtractor
+from extractor import LDAExtractor,KeywordSentimentExtractor
+from agentManager import AgentManager
+from agent import TopicSentimentAgent
 
 if __name__=="__main__":
 	start_date='08-08-2016'
@@ -10,11 +12,12 @@ if __name__=="__main__":
 
 	builder=Builder()
 	builder.addExtractor(LDAExtractor())
+	builder.addExtractor(KeywordSentimentExtractor())
+	publishers=AgentManager(TopicSentimentAgent)
 	db_params={'dbname':'moreover','username':'sam','password':'s.stern'}
 	data=Loader(**db_params)
 	query_file="simple query"
 
 	for date in date_list:
-		data.executeQuery(query_file,date)
-		builder.process(data)
-
+		data.executeQuery(query_file,date) #obtain the data for the given query
+		builder.process(data,publishers) #extract the relevant information from the data
