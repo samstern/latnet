@@ -129,12 +129,12 @@ class LDAExtractor(TopicExtractor):
 
     def apply(self, text):
         tokenized = self.tokenizer.tokenize(text)
-        self.stopless.append(
-            [token for token in tokenized if
-             token not in stopwords.words('english')])
+        ex_stopwords = [token for token in tokenized
+                        if token not in stopwords.words('english')]
+        self.stopless.append(ex_stopwords)
 
         try:
-            doc_bow = self.dict.doc2bow(text)
+            doc_bow = self.dict.doc2bow(ex_stopwords)
             return self.lda_model.get_document_topics(doc_bow)
         except AttributeError:
             return None
