@@ -14,6 +14,9 @@ class Extractor(object):
 	def apply(self,text):
 		pass	
 
+	def update(self,*args,**kwargs):
+		pass
+
 
 class SentimentExtractor(Extractor):
 	"""docstring for SentimentExtractor"""
@@ -21,6 +24,9 @@ class SentimentExtractor(Extractor):
 		super(SentimentExtractor, self).__init__()
 
 	def apply(self,text):
+		pass
+
+	def update(self,*args,**kwargs):
 		pass
 
 class KeywordSentimentExtractor(SentimentExtractor):
@@ -32,12 +38,15 @@ class KeywordSentimentExtractor(SentimentExtractor):
 			self.excitement_keywords=keywords['Excitement']
 			self.anxiety_keywords=keywords['Anxiety']
 
-	def apply(self,text):
+	def apply(self,text,count_method='count',net_method='ratio'):
 		emotion_count={'anxiety':0,'excitement':0,'net':0}
-		emotion_count['anxiety']+=countKeywords(text,self.anxiety_keywords)
-		emotion_count['excitement']+=countKeywords(text,self.excitement_keywords)
-		emotion_count['net']=netSentiment(emotion_count['anxiety'],emotion_count['excitement'],method='ratio')
+		emotion_count['anxiety']+=countKeywords(text,self.anxiety_keywords,method=count_method)
+		emotion_count['excitement']+=countKeywords(text,self.excitement_keywords,method=count_method)
+		emotion_count['net']=netSentiment(emotion_count['anxiety'],emotion_count['excitement'],method=net_method)
 		return emotion_count
+
+	def update(self,*args,**kwargs):
+		pass
 
 def countKeywords(text,keywords,method="count"):
 	count=0
@@ -90,27 +99,47 @@ class TopicExtractor(Extractor):
 	def apply(self,text):	
 		pass
 
+	def update(self,*args,**kwargs):
+		pass
+
 class LDAExtractor(TopicExtractor):
 	"""docstring for LDAExtractor"""
-	def __init__(self, num_topics=50,eta=0.0001):
+	def __init__(self, num_topics=50,eta=0.,bigram_mode=False):
 		super(LDAExtractor, self).__init__()
 		self.num_topics = num_topics
+		self.bigram_mode = bigram
+		if self.bigram_mode:
+			self.bigram=models.phrases.Phrases()
 
-		self.tokenizer=RegexpTokenizer(r'\w+')
+		self.tokenizer = RegexpTokenizer(r'\w+')
 		self.stemmer = SnowballStemmer("english")
 
 		self.stopless=[]
+		self.gs_dict=corpora.Dictionary()
 
 		self.lda_model=None
 
 	def apply(self,text):
 		tokenized=self.tokenizer.tokenize(text)
 		self.stopless.append([token for token in tokenized if token not in stopwords.words('english')])
+		doc_bow=self.dict.doc2bow(text)
+
+		try:
+			return self.lda_model.get_document_topics(doc_bow)
+		except AttributeError:
+			return None
 
 	def update(self):
-		bigram=models.phrases.Phrases(self.stopless)
-		dictionary = corpora.Dictionary(bigram[self.stopless])
-		corpus = [dictionary.doc2bow(text) for text in bigram[self.stopless]]
+		if self.bigram_mode:
+			#bigram=models.phrases.Phrases(self.stopless)
+			self.bigram.add_vocab(self.stopless)
+			self.dict.add_documents(bigram[self.stopless])
+			corpus=[self.dict.doc2bow(text) for text in bigram[self.stopless]]
+		else:
+			self.dict.add_documents(self.stopless)
+			corpus=[self.dict.doc2bow(text) for text in self.stopless]]
+		#dictionary = corpora.Dictionary(bigram[self.stopless])
+		#corpus = [dictionary.doc2bow(text) for text in bigram[self.stopless]]
 		try:
 			self.lda_model.update(corpus)
 		except AttributeError:
@@ -118,3 +147,5 @@ class LDAExtractor(TopicExtractor):
 			etas=np.full([self.num_topics,num_tokens],eta)
 			self.lda_model=models.ldamodel.LdaModel(corpus=corpus,id2word=dictionary,num_topics=self.num_topics,alpha='auto',eta='auro',passes=5)
 		
+	def resetStopless(self):
+		self.stopless=[]
