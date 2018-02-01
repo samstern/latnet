@@ -23,9 +23,9 @@ class AgentManager(object):
 	#		update_data['agent']
 
 
-	def addAgent(self,*args,**kwargs):
-		agent=self.cls(*args,**kwargs)
-		self.agents.add(agent)
+	def addAgent(self,identifier,*args,**kwargs):
+		agent=self.cls(identifier,*args,**kwargs)
+		self.agents[identifier]=agent
 
 	#def updateAgent(self,agent,data):
 	#	if agent in self.agents:

@@ -13,5 +13,6 @@ class TopicSentimentAgent(Agent):
 		super(TopicSentimentAgent, self).__init__(identifier)
 		self.topic_sentiment=dict()
 
-	def update(self,topic,sentiment):
-		self.topic_sentiment[topic]=sentiment
+	def update(self,topics,sentiment):
+		for topic_id,topic_probability in topics:
+			self.topic_sentiment[topic_id]=sentiment*topic_probability
