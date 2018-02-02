@@ -14,11 +14,12 @@ class Builder(object):
     def processText(self, text):
         out_data = {}
         for extractor in self.extractors:
-            out_data[extractor] = extractor.apply(text)
+            name=extractor.getName()
+            out_data[name] = extractor.apply(text)
         return out_data
 
     def updateExtractors(self):
-        for extractor in self.extractor:
+        for extractor in self.extractors:
             extractor.update()
 
     def process(self, in_data, agent_manager,
@@ -46,6 +47,6 @@ class Builder(object):
             if agent_identifier not in agent_manager.names:
                 agent_manager.addAgent(agent_identifier)
             agent = agent_manager.getAgent(agent_identifier)
-            agent.update(out_data)
+            agent.update(**out_data)
 
         self.updateExtractors()

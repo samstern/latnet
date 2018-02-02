@@ -4,14 +4,15 @@ from nltk.tokenize import RegexpTokenizer
 from nltk.corpus import stopwords
 from nltk.stem.snowball import SnowballStemmer
 import json
+import numpy as np
 
 
 class Extractor(object):
     """
     docstring for Extractor
     """
-    def __init__(self):
-        pass
+    def __init__(self,name="base extractor"):
+        self.name=name
 
     def apply(self, text):
         pass
@@ -19,18 +20,20 @@ class Extractor(object):
     def update(self, *args, **kwargs):
         pass
 
+    def getName(self):
+        """name must match the input parameter of the agent"""
+        return self.name
 
 class SentimentExtractor(Extractor):
     """docstring for SentimentExtractor"""
-    def __init__(self):
-        super(SentimentExtractor, self).__init__()
+    def __init__(self,name="sentiment"):
+        super(SentimentExtractor, self).__init__(name=name)
 
     def apply(self, text):
         pass
 
     def update(self, *args, **kwargs):
         pass
-
 
 class KeywordSentimentExtractor(SentimentExtractor):
     """docstring for KeywordSentimentExtractor"""
@@ -99,8 +102,8 @@ def netSentiment(anxiety, excitement, method="difference"):
 
 class TopicExtractor(Extractor):
     """docstring for TopicExtractor"""
-    def __init__(self):
-        pass
+    def __init__(self,name="topic"):
+        super(TopicExtractor, self).__init__(name=name)
 
     def apply(self, text):
         pass
@@ -158,7 +161,7 @@ class LDAExtractor(TopicExtractor):
             etas = np.full([self.num_topics,num_tokens], self.eta)
             self.lda_model = models.ldamodel.LdaModel(
                 corpus=corpus, id2word=self.dict, num_topics=self.num_topics,
-                alpha='auto', eta='auro', passes=5)
+                alpha='auto', eta='auto', passes=5)
 
     def resetStopless(self):
         self.stopless = []
