@@ -26,7 +26,7 @@ class Extractor(object):
 
 class SentimentExtractor(Extractor):
     """docstring for SentimentExtractor"""
-    def __init__(self,name="sentiment"):
+    def __init__(self, name="sentiment"):
         super(SentimentExtractor, self).__init__(name=name)
 
     def apply(self, text):
@@ -165,3 +165,33 @@ class LDAExtractor(TopicExtractor):
 
     def resetStopless(self):
         self.stopless = []
+
+
+class RelationExtractor(Extractor):
+    """Extractor for relationships between agents"""
+    def __init__(self, name="relation"):
+        super(RelationExtractor, self).__init__(name=name)
+        pass
+
+    def apply(self):
+        pass
+
+    def update(self):
+       pass
+
+
+class WithinDocumentRelationExtactor(RelationExtractor):
+    """Identify and Extract relations identified from the content of a specific document"""
+    def __init__(self):
+        super(WithinDocumentRelationExtactor, self).__init__()
+        pass
+
+
+
+class BetweenDocumentRelationExtractor(RelationExtractor):
+    """Identify and extract relations based on shared properties of different
+    documents (such as shared authorship)
+    """
+    def __init__(self):
+        super(BetweenDocumentRelationExtractor, self).__init__()
+        pass
