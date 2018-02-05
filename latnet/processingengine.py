@@ -35,6 +35,7 @@ class Builder(object):
                 text = text.lower()
 
             out_data = self.processText(text)
+            return out_data
 
             if agent_field_name is None:
                 #--TODO
