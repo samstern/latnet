@@ -16,7 +16,7 @@ class Relations(object):
 
 class CoTopicRelations(object):
     """keep track of which sourcesare contributing to the same topics"""
-    def __init__(self, arg):
+    def __init__(self):
         super(CoTopicRelations, self).__init__()
         self.topic_contributors = defaultdict(set)
 
