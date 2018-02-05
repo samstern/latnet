@@ -6,7 +6,7 @@ class Agent(object):
     def __init__(self, identifier):
         self.identifier = identifier
 
-    def update(self,*args,**kwargs):
+    def update(self, *args, **kwargs):
         pass
 
 
@@ -18,8 +18,13 @@ class TopicSentimentAgent(Agent):
 
     def update(self, topic, sentiment):
         if topic is not None:
-            net_sentiment=sentiment['net']
+            net_sentiment = sentiment['net']
             for topic_id, topic_probability in topic:
                 print(topic_id)
                 print(topic_probability)
                 self.topic_sentiment[topic_id] += net_sentiment * topic_probability
+
+    def getTopics(self, topicStrengthThreshold=2):
+        out = {key: val for key, val in
+               self.topic_sentiment.iteritems() if val > topicStrengthThreshold}
+        return out

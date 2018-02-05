@@ -14,7 +14,7 @@ class Builder(object):
     def processText(self, text):
         out_data = {}
         for extractor in self.extractors:
-            name=extractor.getName()
+            name = extractor.getName()
             out_data[name] = extractor.apply(text)
         return out_data
 

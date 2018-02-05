@@ -102,7 +102,7 @@ def netSentiment(anxiety, excitement, method="difference"):
 
 class TopicExtractor(Extractor):
     """docstring for TopicExtractor"""
-    def __init__(self,name="topic"):
+    def __init__(self, name="topic"):
         super(TopicExtractor, self).__init__(name=name)
 
     def apply(self, text):
