@@ -26,5 +26,5 @@ class TopicSentimentAgent(Agent):
 
     def getTopics(self, topicStrengthThreshold=2):
         out = {key: val for key, val in
-               self.topic_sentiment.iteritems() if val > topicStrengthThreshold}
+               self.topic_sentiment.iteritems() if abs(val) > topicStrengthThreshold}
         return out
