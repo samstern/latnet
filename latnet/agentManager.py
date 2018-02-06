@@ -17,8 +17,8 @@ class AgentManager(object):
             pass  #TODO: handle case when the agent isn't of type Agent
 
     def getAgent(self, agent_identifier):
-        assert agent_identifier in self.agents
-        return self.agents[agent_identifier]
+        assert agent_identifier in self.names
+        return self.names[agent_identifier]
 
     def addAgent(self, identifier, *args, **kwargs):
         agent = self.cls(identifier, *args, **kwargs)
