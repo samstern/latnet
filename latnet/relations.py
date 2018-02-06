@@ -20,8 +20,8 @@ class CoTopicRelations(object):
         super(CoTopicRelations, self).__init__()
         self.topic_contributors = defaultdict(set)
 
-    def updateRelations(self, agent_manager):
-        for agent in agent_manager.agents:
+    def updateRelations(self, agents):
+        for agent in agents:
             for topic in agent.getTopics():
                 self.topic_contributors[topic].add(agent)
 

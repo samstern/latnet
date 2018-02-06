@@ -6,8 +6,9 @@ class AgentManager(object):
     def __init__(self, cls):
         assert issubclass(cls, Agent)
         self.cls = cls  # The type of agent we want to work with (e.g., TopicSentimentAgent)
-        self.agents = dict()  # key value pairs where the keys are the agents' identifiers and the values are the agents
-        self.names = set()  # names of each of the agents
+        self.agents = set()  # key value pairs where the keys are the agents' identifiers and the values are the agents
+        self.names = dict()  # names of each of the agents
+
 
     def __contains__(self, agent):
         if isinstance(agent, self.cls):
@@ -21,4 +22,5 @@ class AgentManager(object):
 
     def addAgent(self, identifier, *args, **kwargs):
         agent = self.cls(identifier, *args, **kwargs)
-        self.agents[identifier] = agent
+        self.names[identifier] = agent
+        self.agents.add(agent)
