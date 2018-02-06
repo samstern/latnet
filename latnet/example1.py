@@ -26,4 +26,5 @@ if __name__ == "__main__":
     for date in date_list:
         data.executeQuery(query_file, date)  # obtain the data for the given query
         builder.process(data, publishers, agent_field_name='source')  # extract the relevant information from the data
-        relations.updateRelations(publishers)
+        agents = publishers.agents
+        relations.updateRelations(agents)
