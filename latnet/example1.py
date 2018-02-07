@@ -23,9 +23,7 @@ if __name__ == "__main__":
     print('here')
     db_params = {'dbname': 'moreover',
                  'user': 'sam',
-                 'password': 's.stern',
-                 'host': 'rickardnyman.ddns.net',
-                 'port': 8888}
+                 'password': 's.stern'}
     data = Loader(**db_params)
     query_file = "simple query"
 
@@ -36,3 +34,8 @@ if __name__ == "__main__":
         relations.updateRelations(agents)
 
     agents_filename = '../data/example1_out.json'
+    publishers.saveToJson(agents_filename)
+
+    loaded_agents=AgentManager.loadFromJson(agents_filename)
+    for agent in loaded_agents.agents:
+        print(agent.topic_sentiment)

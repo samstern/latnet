@@ -15,13 +15,13 @@ class Agent(object):
     @classmethod
     def fromJson(cls, in_data):
         out = cls(**in_data)
-
+        return out
 
 class TopicSentimentAgent(Agent):
     """An Agent that has a sentiment score for various topics"""
     def __init__(self, identifier,topic_sentiment=None):
         super(TopicSentimentAgent, self).__init__(identifier)
-        if topic_sentiment is not None:
+        if topic_sentiment is None:
             self.topic_sentiment = defaultdict(float)
         elif isinstance(topic_sentiment,dict):
             self.topic_sentiment = topic_sentiment
