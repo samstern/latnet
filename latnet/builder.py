@@ -44,9 +44,12 @@ class Builder(object):
                 #case where the agent names are expected to be in the incoming data
                 agent_identifier = item[agent_field_name]
 
-            if agent_identifier not in agent_manager.names:
+            if agent_identifier in agent_manager.names:
+                agent = agent_manager.getAgent(agent_identifier)
+            else:
+                agent = agent_manager.makeAgent(agent_identifier)
                 agent_manager.addAgent(agent_identifier)
-            agent = agent_manager.getAgent(agent_identifier)
+
             agent.update(**out_data)
 
         self.updateExtractors()

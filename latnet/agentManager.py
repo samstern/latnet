@@ -4,15 +4,15 @@ import json
 
 class AgentManager(object):
     """Container of Agent objects"""
-    def __init__(self, cls):
-        assert issubclass(cls, Agent)
-        self.cls = cls  # The type of agent we want to work with (e.g., TopicSentimentAgent)
+    def __init__(self, agnet_type):
+        assert issubclass(agent_type, Agent)
+        self.agent_type = agent_type  # The type of agent we want to work with (e.g., TopicSentimentAgent)
         self.agents = set()  # key value pairs where the keys are the agents' identifiers and the values are the agents
         self.names = dict()  # names of each of the agents
 
 
     def __contains__(self, agent):
-        if isinstance(agent, self.cls):
+        if isinstance(agent, self.agent_type):
             return (agent in self.agents)
         else:
             pass  #TODO: handle case when the agent isn't of type Agent
@@ -21,10 +21,14 @@ class AgentManager(object):
         assert agent_identifier in self.names
         return self.names[agent_identifier]
 
-    def addAgent(self, identifier, *args, **kwargs):
-        agent = self.cls(identifier, *args, **kwargs)
+    def addAgent(self, agent):
+        identifier = agent.getIdentifier()
         self.names[identifier] = agent
         self.agents.add(agent)
+
+    def makeAgent(self, *args, **kwargs):
+        agent = self.agent_type(identifier, *args, **kwargs)
+        return agent
 
     def saveToJson(self, file_name):
         with open(file_name, 'w') as f:
@@ -33,7 +37,7 @@ class AgentManager(object):
                 agent_list.append(agent.toJson())
             json_obj = dict()
             json_obj['agents'] = agent_list
-            json_obj['class'] = self.cls.__name__
+            json_obj['class'] = self.agent_type.__name__
             json.dump(json_obj, f)
 
     @classmethod
