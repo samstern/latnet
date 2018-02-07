@@ -5,6 +5,9 @@ from extractor import LDAExtractor, KeywordSentimentExtractor
 from agentManager import AgentManager
 from agent import TopicSentimentAgent
 from relations import CoTopicRelations
+import os
+
+print(os.getcwd())
 
 if __name__ == "__main__":
     start_date = '08-08-2016'
@@ -17,9 +20,12 @@ if __name__ == "__main__":
     builder.addExtractor(KeywordSentimentExtractor())
     publishers = AgentManager(TopicSentimentAgent)
     relations = CoTopicRelations()
+    print('here')
     db_params = {'dbname': 'moreover',
-                 'username': 'sam',
-                 'password': 's.stern'}
+                 'user': 'sam',
+                 'password': 's.stern',
+                 'host': 'rickardnyman.ddns.net',
+                 'port': 8888}
     data = Loader(**db_params)
     query_file = "simple query"
 
@@ -28,3 +34,5 @@ if __name__ == "__main__":
         builder.process(data, publishers, agent_field_name='source')  # extract the relevant information from the data
         agents = publishers.agents
         relations.updateRelations(agents)
+
+    agents_filename = '../data/example1_out.json'

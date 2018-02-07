@@ -7,10 +7,9 @@ class Loader(object):
     def __init__(self, **kwargs):
         self.db_connect(**kwargs)
 
-    def db_connect(self, dbname, username, password):
+    def db_connect(self, **kwargs):
         """sets up a connection with a postgresql database using psycopg2"""
-        conn = psycopg2.connect(
-            database=dbname, user=username, password=password)
+        conn = psycopg2.connect(**kwargs)
         self.cur = conn.cursor(cursor_factory=psycopg2.extras.DictCursor)
 
     def executeQuery(self, query_file, *args):

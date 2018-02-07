@@ -1,4 +1,5 @@
 from agent import Agent
+import json
 
 
 class AgentManager(object):
@@ -24,3 +25,26 @@ class AgentManager(object):
         agent = self.cls(identifier, *args, **kwargs)
         self.names[identifier] = agent
         self.agents.add(agent)
+
+    def saveToJson(self, file_name):
+        with open(file_name, 'w') as f:
+            agent_list = []
+            for agent in self.agents:
+                agent_list.append(agent.toJson())
+            json_obj = dict()
+            json_obj['agents'] = agent_list
+            json_obj['class'] = self.cls
+            json.dump(json_obj, f)
+
+    @classmethod
+    def loadFromJson(cls, file_name):
+        with open(file_name, 'w') as f:
+            from_file = json.load(f)
+            agent_type = from_file['class']
+            agents = from_file['agents']
+            out = cls(agent_type)
+            for agent_data in agents:
+                agent = agent_type.fromJson(agent_data)
+                out.agents.add(agent)
+                out.names[agent.getIdentifier] = agent
+
