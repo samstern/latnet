@@ -12,6 +12,11 @@ class Agent(object):
     def update(self, *args, **kwargs):
         pass
 
+    def toJson(self):
+        dictified = self.__dict__
+        jsonified = json.dumps(dictified)
+        return jsonified
+
     @classmethod
     def fromJson(cls, in_data):
         out = cls(**in_data)
@@ -40,9 +45,4 @@ class TopicSentimentAgent(Agent):
         out = {key: val for key, val in
                self.topic_sentiment.iteritems() if abs(val) > topicStrengthThreshold}
         return out
-
-    def toJson(self):
-        dictified = self.__dict__
-        jsonified = json.dumps(dictified)
-        return jsonified
 
