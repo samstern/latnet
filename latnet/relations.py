@@ -1,4 +1,5 @@
 from collections import defaultdict
+from fun import set_default
 import json
 
 class Relations(object):
@@ -7,7 +8,7 @@ class Relations(object):
     def __init__(self):
         super(Relations, self).__init__()
 
-    def updateRelations(self, agents):
+    def updateRelations(self, agent_identifies):
         pass
 
     def getRelations(self):
@@ -15,15 +16,16 @@ class Relations(object):
 
     def saveToJson(self,file_name):
         dictified = self.__dict__
+        print(dictified)
         rel_types = self.__class__.__name__
         json_obj = dict()
         json_obj['class'] = rel_types
         json_obj['relations'] = dictified
         with open(file_name, 'w') as f:
-            json.dump(json_obj, f)
+            json.dump(json_obj, f, default=set_default)
 
     @classmethod
-    def fromJson(cls, file_name):
+    def loadFromJson(cls, file_name):
         with open(file_name, 'r') as f:
             from_file = json.load(f)
         relation_class = eval(from_file['class'])
@@ -32,7 +34,7 @@ class Relations(object):
         return relations
 
 
-class CoTopicRelations(object):
+class CoTopicRelations(Relations):
     """keep track of which sourcesare contributing to the same topics"""
     def __init__(self, topic_contributors=None):
         super(CoTopicRelations, self).__init__()
@@ -46,7 +48,7 @@ class CoTopicRelations(object):
     def updateRelations(self, agents):
         for agent in agents:
             for topic in agent.getTopics():
-                self.topic_contributors[topic].add(agent)
+                self.topic_contributors[topic].add(agent.getIdentifier())
 
     def getRelations(self):
         return self.topic_contributors

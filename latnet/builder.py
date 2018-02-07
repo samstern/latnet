@@ -48,7 +48,7 @@ class Builder(object):
                 agent = agent_manager.getAgent(agent_identifier)
             else:
                 agent = agent_manager.makeAgent(agent_identifier)
-                agent_manager.addAgent(agent_identifier)
+                agent_manager.addAgent(agent)
 
             agent.update(**out_data)
 

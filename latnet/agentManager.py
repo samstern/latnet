@@ -4,7 +4,7 @@ import json
 
 class AgentManager(object):
     """Container of Agent objects"""
-    def __init__(self, agnet_type):
+    def __init__(self, agent_type):
         assert issubclass(agent_type, Agent)
         self.agent_type = agent_type  # The type of agent we want to work with (e.g., TopicSentimentAgent)
         self.agents = set()  # key value pairs where the keys are the agents' identifiers and the values are the agents
@@ -26,7 +26,7 @@ class AgentManager(object):
         self.names[identifier] = agent
         self.agents.add(agent)
 
-    def makeAgent(self, *args, **kwargs):
+    def makeAgent(self,identifier, *args, **kwargs):
         agent = self.agent_type(identifier, *args, **kwargs)
         return agent
 

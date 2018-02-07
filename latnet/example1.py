@@ -20,7 +20,6 @@ if __name__ == "__main__":
     builder.addExtractor(KeywordSentimentExtractor())
     publishers = AgentManager(TopicSentimentAgent)
     relations = CoTopicRelations()
-    print('here')
     db_params = {'dbname': 'moreover',
                  'user': 'sam',
                  'password': 's.stern'}
@@ -34,8 +33,18 @@ if __name__ == "__main__":
         relations.updateRelations(agents)
 
     agents_filename = '../data/example1_out.json'
+    relations_filename = '../data/example1_relations.json'
     publishers.saveToJson(agents_filename)
 
     loaded_agents=AgentManager.loadFromJson(agents_filename)
     for agent in loaded_agents.agents:
-        print(agent.topic_sentiment)
+        print(agent.identifier)
+
+    relations.saveToJson(relations_filename)
+    for relation in relations.topic_contributors:
+        print(relation)
+    
+    loaded_rels=CoTopicRelations.loadFromJson(relations_filename)
+    for relation in loaded_rels.topic_contributors:
+        print(relation)
+    print(relations==loaded_rels)
