@@ -31,9 +31,9 @@ class Relations(object):
         print(from_file)
         relation_class = eval(from_file['class'])
         relations_lists = from_file['relations']
-        relations_data = {int(key): set(val) for key, val in relations_lists['topic_contributors'].iteritems()}
+        feed_in = relation_class._format_input(relations_list)
         print(relations_data)
-        relations = relation_class(topic_contributors=relations_data)
+        relations = relation_class(**feed_in)
         return relations
 
 
@@ -48,6 +48,9 @@ class CoTopicRelations(Relations):
         else:
             raise ValueError(('topic_contributors must be of type dict'))
 
+    def __eq__(self, other):
+        return self.__dict__ == other.__dict__
+
     def updateRelations(self, agents):
         for agent in agents:
             for topic in agent.getTopics():
@@ -55,3 +58,8 @@ class CoTopicRelations(Relations):
 
     def getRelations(self):
         return self.topic_contributors
+
+    @staticmethod
+    def _format_unput(in_data):
+        return {'topic_contributors': {int(key): set(val) for key, val
+                in in_data['topic_contributors'].iteritems()}}

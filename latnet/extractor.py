@@ -114,7 +114,8 @@ class TopicExtractor(Extractor):
 
 class LDAExtractor(TopicExtractor):
     """docstring for LDAExtractor"""
-    def __init__(self, num_topics=50, eta=0.0001, bigram_mode=False, dictionary=None):
+    def __init__(self, num_topics=50, eta=0.0001,
+                 bigram_mode=False, dictionary=None):
         super(LDAExtractor, self).__init__()
         self.num_topics = num_topics
         self.bigram_mode = bigram_mode
@@ -128,6 +129,7 @@ class LDAExtractor(TopicExtractor):
         self.stopless = []
         if dictionary is None:
             self.dictionary = corpora.Dictionary()
+
         else:
             self.dictionary = corpora.Dictionary.load_from_text(dictionary)
 
@@ -161,11 +163,12 @@ class LDAExtractor(TopicExtractor):
             print('here')
             self.lda_model.update(corpus)
         except AttributeError:
-            num_tokens = len(self.dictionary.token2id)
-            etas = np.full([self.num_topics,num_tokens], self.eta)
+            # num_tokens = len(self.dictionary.token2id)
+            # etas = np.full([self.num_topics, num_tokens], self.eta)
             self.lda_model = models.ldamodel.LdaModel(
-                corpus=corpus, id2word=self.dictionary, num_topics=self.num_topics,
-                alpha='auto', eta='auto', passes=5)
+                corpus=corpus, id2word=self.dictionary,
+                num_topics=self.num_topics, alpha='auto',
+                eta='auto', passes=5)
 
     def resetStopless(self):
         self.stopless = []
