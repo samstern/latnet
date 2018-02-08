@@ -14,9 +14,10 @@ if __name__ == "__main__":
     num_days = 2
     date_list = [datetime.strptime(start_date, "%d-%m-%Y") +
                  timedelta(days=x) for x in range(num_days)]
+    gs_dict = '../data/gensim/wiki_en_wordids.txt.bz2'
 
     builder = Builder()
-    builder.addExtractor(LDAExtractor())
+    builder.addExtractor(LDAExtractor(dictionary=gs_dict))
     builder.addExtractor(KeywordSentimentExtractor())
     publishers = AgentManager(TopicSentimentAgent)
     relations = CoTopicRelations()

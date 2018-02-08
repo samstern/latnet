@@ -37,11 +37,9 @@ class TopicSentimentAgent(Agent):
         if topic is not None:
             net_sentiment = sentiment['net']
             for topic_id, topic_probability in topic:
-                print(topic_id)
-                print(topic_probability)
                 self.topic_sentiment[topic_id] += net_sentiment * topic_probability
 
-    def getTopics(self, topicStrengthThreshold=2):
+    def getTopics(self, topicStrengthThreshold=0.5):
         out = {key: val for key, val in
                self.topic_sentiment.iteritems() if abs(val) > topicStrengthThreshold}
         return out

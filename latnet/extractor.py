@@ -114,7 +114,7 @@ class TopicExtractor(Extractor):
 
 class LDAExtractor(TopicExtractor):
     """docstring for LDAExtractor"""
-    def __init__(self, num_topics=50, eta=0.0001, bigram_mode=False):
+    def __init__(self, num_topics=50, eta=0.0001, bigram_mode=False, dictionary=None):
         super(LDAExtractor, self).__init__()
         self.num_topics = num_topics
         self.bigram_mode = bigram_mode
@@ -126,7 +126,10 @@ class LDAExtractor(TopicExtractor):
         self.stemmer = SnowballStemmer("english")
 
         self.stopless = []
-        self.dict = corpora.Dictionary()
+        if dictionary is None:
+            self.dictionary = corpora.Dictionary()
+        else:
+            self.dictionary = corpora.Dictionary.load_from_text(dictionary)
 
         self.lda_model = None
 
@@ -137,7 +140,7 @@ class LDAExtractor(TopicExtractor):
         self.stopless.append(ex_stopwords)
 
         try:
-            doc_bow = self.dict.doc2bow(ex_stopwords)
+            doc_bow = self.dictionary.doc2bow(ex_stopwords)
             return self.lda_model.get_document_topics(doc_bow)
         except AttributeError:
             return None
@@ -146,21 +149,22 @@ class LDAExtractor(TopicExtractor):
         if self.bigram_mode:
             # bigram=models.phrases.Phrases(self.stopless)
             self.bigram.add_vocab(self.stopless)
-            self.dict.add_documents(self.bigram[self.stopless])
-            corpus = [self.dict.doc2bow(text)
+            # self.dictionary.add_documents(self.bigram[self.stopless])
+            corpus = [self.dictionary.doc2bow(text)
                       for text in self.bigram[self.stopless]]
         else:
-            self.dict.add_documents(self.stopless)
-            corpus = [self.dict.doc2bow(text) for text in self.stopless]
+            # self.dictionary.add_documents(self.stopless)
+            corpus = [self.dictionary.doc2bow(text) for text in self.stopless]
         # dictionary = corpora.Dictionary(bigram[self.stopless])
         # corpus = [dictionary.doc2bow(text) for text in bigram[self.stopless]]
         try:
+            print('here')
             self.lda_model.update(corpus)
         except AttributeError:
-            num_tokens = len(self.dict.token2id)
+            num_tokens = len(self.dictionary.token2id)
             etas = np.full([self.num_topics,num_tokens], self.eta)
             self.lda_model = models.ldamodel.LdaModel(
-                corpus=corpus, id2word=self.dict, num_topics=self.num_topics,
+                corpus=corpus, id2word=self.dictionary, num_topics=self.num_topics,
                 alpha='auto', eta='auto', passes=5)
 
     def resetStopless(self):

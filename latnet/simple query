@@ -1,3 +1,4 @@
 SELECT content, source
 FROM news
-limit 100;
+where word_count<=500
+limit 300;
