@@ -29,7 +29,13 @@ class TopicSentimentAgent(Agent):
         if topic_sentiment is None:
             self.topic_sentiment = defaultdict(float)
         elif isinstance(topic_sentiment,dict):
-            self.topic_sentiment = topic_sentiment
+            try: # when topics are ints but are passed as strings
+                self.topic_sentiment=defaultdict(float)
+                for topic in topic_sentiment:
+                    key=int(topic)
+                    self.topic_sentiment[key] = topic_sentiment[topic]
+            except ValueError:
+                self.topic_sentiment = topic_sentiment
         else:
             raise ValueError('topic_sentiment must be of type dict')
 

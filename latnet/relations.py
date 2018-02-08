@@ -28,11 +28,9 @@ class Relations(object):
     def loadFromJson(cls, file_name):
         with open(file_name, 'r') as f:
             from_file = json.load(f)
-        print(from_file)
         relation_class = eval(from_file['class'])
-        relations_lists = from_file['relations']
+        relations_list = from_file['relations']
         feed_in = relation_class._format_input(relations_list)
-        print(relations_data)
         relations = relation_class(**feed_in)
         return relations
 
@@ -60,6 +58,6 @@ class CoTopicRelations(Relations):
         return self.topic_contributors
 
     @staticmethod
-    def _format_unput(in_data):
+    def _format_input(in_data):
         return {'topic_contributors': {int(key): set(val) for key, val
                 in in_data['topic_contributors'].iteritems()}}
