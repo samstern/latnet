@@ -22,6 +22,10 @@ class Builder(object):
         for extractor in self.extractors:
             extractor.update()
 
+    def saveExtractors(self, dir_name):
+        for extractor in self.extractors:
+            extractor.save(dir_name)
+
     def process(self, in_data, agent_manager,
                 agent_field_name=None, text_field_name='content',
                 decode=True, lower=True):
@@ -51,5 +55,3 @@ class Builder(object):
                 agent_manager.addAgent(agent)
 
             agent.update(**out_data)
-
-        self.updateExtractors()
