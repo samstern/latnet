@@ -24,6 +24,9 @@ class Extractor(object):
         """name must match the input parameter of the agent"""
         return self.name
 
+    def save(self,dir_name):
+        pass
+
 class SentimentExtractor(Extractor):
     """docstring for SentimentExtractor"""
     def __init__(self, name="sentiment"):
@@ -134,6 +137,9 @@ class LDAExtractor(TopicExtractor):
             self.dictionary = corpora.Dictionary.load_from_text(dictionary)
 
         self.lda_model = None
+
+    def save(self,dir_name):
+        self.lda_model.save(dir_name+'lda_model')
 
     def apply(self, text):
         tokenized = self.tokenizer.tokenize(text)
