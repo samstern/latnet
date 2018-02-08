@@ -28,9 +28,12 @@ class Relations(object):
     def loadFromJson(cls, file_name):
         with open(file_name, 'r') as f:
             from_file = json.load(f)
+        print(from_file)
         relation_class = eval(from_file['class'])
-        relations_data = from_file['relations']
-        relations = relation_class(**relations_data)
+        relations_lists = from_file['relations']
+        relations_data = {int(key): set(val) for key, val in relations_lists['topic_contributors'].iteritems()}
+        print(relations_data)
+        relations = relation_class(topic_contributors=relations_data)
         return relations
 
 
