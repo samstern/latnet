@@ -16,7 +16,6 @@ class Relations(object):
 
     def saveToJson(self,file_name):
         dictified = self.__dict__
-        print(dictified)
         rel_types = self.__class__.__name__
         json_obj = dict()
         json_obj['class'] = rel_types

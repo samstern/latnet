@@ -166,7 +166,6 @@ class LDAExtractor(TopicExtractor):
         # dictionary = corpora.Dictionary(bigram[self.stopless])
         # corpus = [dictionary.doc2bow(text) for text in bigram[self.stopless]]
         try:
-            print('here')
             self.lda_model.update(corpus)
         except AttributeError:
             # num_tokens = len(self.dictionary.token2id)

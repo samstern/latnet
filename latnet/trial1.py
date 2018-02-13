@@ -8,11 +8,10 @@ from relations import CoTopicRelations
 
 if __name__ == "__main__":
     start_date = '08-08-2016'
-    num_days = 2
+    num_days = 20
     date_list = [datetime.strptime(start_date, "%d-%m-%Y") +
                  timedelta(days=x) for x in range(num_days)]
     gs_dict = '../data/gensim/wiki_en_wordids.txt.bz2'
-    relations_filename = '../data/example1_relations.json'
 
     builder = Builder()
     builder.addExtractor(LDAExtractor(dictionary=gs_dict))
@@ -34,8 +33,8 @@ if __name__ == "__main__":
         agents = publishers.agents
         relations.updateRelations(agents)
 
-    agents_filename = '../data/example1_out.json'
-    relations_filename = '../data/example1_relations.json'
+    agents_filename = '../data/trial1_agents.json'
+    relations_filename = '../data/trial1_relations.json'
     extractor_dirname = '../data/extractors/'
     publishers.saveToJson(agents_filename)
     relations.saveToJson(relations_filename)
