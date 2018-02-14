@@ -22,6 +22,10 @@ class Agent(object):
         out = cls(**in_data)
         return out
 
+    def toNetworkxFormat(self):
+        #should be overridden by subclass
+        return self.getIdentifier()
+
 class TopicSentimentAgent(Agent):
     """An Agent that has a sentiment score for various topics"""
     def __init__(self, identifier,topic_sentiment=None):
@@ -50,3 +54,5 @@ class TopicSentimentAgent(Agent):
                self.topic_sentiment.iteritems() if abs(val) > topicStrengthThreshold}
         return out
 
+    def toNetworkXFormat(self):
+        return (self.identifier, self.topic_sentiment)

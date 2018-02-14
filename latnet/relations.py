@@ -1,6 +1,8 @@
 from collections import defaultdict
 from fun import set_default
+from itertools import combinations
 import json
+
 
 class Relations(object):
     """Abstract class for identifying different and storing types 
@@ -33,6 +35,8 @@ class Relations(object):
         relations = relation_class(**feed_in)
         return relations
 
+    def toNetworkXFormat(self):
+        pass
 
 class CoTopicRelations(Relations):
     """keep track of which sourcesare contributing to the same topics"""
@@ -60,3 +64,13 @@ class CoTopicRelations(Relations):
     def _format_input(in_data):
         return {'topic_contributors': {int(key): set(val) for key, val
                 in in_data['topic_contributors'].iteritems()}}
+
+    def toNetworkXFormat(self):
+        pairs=defaultdict(dict)
+        for topic in self.topic_contributors:
+            agent_ids = self.topic_contributors[topic]
+            combos = combinations(agent_ids,2)
+            for combo in combos:
+                pairs[combo][topic]=True
+
+        return [(pair[0],pair[1],pairs[pair]) for pair in pairs]

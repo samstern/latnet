@@ -57,3 +57,6 @@ class AgentManager(object):
                 out.agents.add(agent)
                 out.names[agent.getIdentifier] = agent
         return out
+
+    def toNetworkXFormat(self):
+            return (agent.toNetworkxFormat() for agent in self.agents)
