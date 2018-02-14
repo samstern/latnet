@@ -17,6 +17,10 @@ class AgentManager(object):
         else:
             pass  #TODO: handle case when the agent isn't of type Agent
 
+    def __iter__(self):
+        #iterates over agents
+        return iter(self.agents)
+
     def getAgent(self, agent_identifier):
         assert agent_identifier in self.names
         return self.names[agent_identifier]
