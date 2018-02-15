@@ -1,4 +1,4 @@
-from agent import *
+from latnet.agent import *
 import json
 
 

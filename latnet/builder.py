@@ -1,4 +1,4 @@
-from extractor import Extractor
+from latnet.extractor import Extractor
 
 
 class Builder(object):
