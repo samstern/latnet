@@ -49,9 +49,9 @@ class TopicSentimentAgent(Agent):
             for topic_id, topic_probability in topic:
                 self.topic_sentiment[topic_id] += net_sentiment * topic_probability
 
-    def getTopics(self, topicStrengthThreshold=0.5):
+    def getTopics(self, topic_strength_threshold):
         out = {key: val for key, val in
-               self.topic_sentiment.iteritems() if abs(val) > topicStrengthThreshold}
+               self.topic_sentiment.iteritems() if abs(val) > topic_strength_threshold}
         return out
 
     def toNetworkXFormat(self):

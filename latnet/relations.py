@@ -52,9 +52,9 @@ class CoTopicRelations(Relations):
     def __eq__(self, other):
         return self.__dict__ == other.__dict__
 
-    def updateRelations(self, agents):
+    def updateRelations(self, agents, topic_strength_threshold=1.0):
         for agent in agents:
-            for topic in agent.getTopics():
+            for topic in agent.getTopics(topic_strength_threshold):
                 self.topic_contributors[topic].add(agent.getIdentifier())
 
     def getRelations(self):
