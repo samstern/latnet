@@ -5,6 +5,7 @@ from nltk.corpus import stopwords
 from nltk.stem.snowball import SnowballStemmer
 import json
 import numpy as np
+import os
 
 
 class Extractor(object):
@@ -40,7 +41,7 @@ class SentimentExtractor(Extractor):
 
 class KeywordSentimentExtractor(SentimentExtractor):
     """docstring for KeywordSentimentExtractor"""
-    def __init__(self, keyword_file="../data/sentiment_keywords.json"):
+    def __init__(self, keyword_file=os.path.join(os.path.dirname(__file__), "../data/sentiment_keywords.json")):
         super(KeywordSentimentExtractor, self).__init__()
         with open(keyword_file, 'r') as f:
             keywords = json.load(f)
