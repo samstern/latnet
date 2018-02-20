@@ -171,10 +171,10 @@ class LDAExtractor(TopicExtractor):
         except AttributeError:
             # num_tokens = len(self.dictionary.token2id)
             # etas = np.full([self.num_topics, num_tokens], self.eta)
-            self.lda_model = models.ldamodel.LdaModel(
+            self.lda_model = models.ldamulticore.LdaMulticore(
                 corpus=corpus, id2word=self.dictionary,
-                num_topics=self.num_topics, alpha='auto',
-                eta='auto', passes=5)
+                num_topics=self.num_topics) #, alpha='auto',
+                # eta='auto', passes=5)
 
     def resetStopless(self):
         self.stopless = []
