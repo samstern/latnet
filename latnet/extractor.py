@@ -150,7 +150,8 @@ class LDAExtractor(TopicExtractor):
 
         try:
             doc_bow = self.dictionary.doc2bow(ex_stopwords)
-            return self.lda_model.get_document_topics(doc_bow)
+            document_topics = self.lda_model.get_document_topics(doc_bow)
+            return document_topics
         except AttributeError:
             return None
 
@@ -175,6 +176,7 @@ class LDAExtractor(TopicExtractor):
                 corpus=corpus, id2word=self.dictionary,
                 num_topics=self.num_topics) #, alpha='auto',
                 # eta='auto', passes=5)
+        self.resetStopless()
 
     def resetStopless(self):
         self.stopless = []
