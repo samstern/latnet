@@ -54,8 +54,7 @@ class AgentManager(object):
             for agent_data in agents:
                 un_jsoned=json.loads(agent_data)
                 agent = agent_type.fromJson(un_jsoned)
-                out.agents.add(agent)
-                out.names[agent.getIdentifier] = agent
+                out.addAgent(agent)
         return out
 
     def toNetworkXFormat(self):
