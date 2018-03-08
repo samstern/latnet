@@ -48,7 +48,8 @@ class KeywordSentimentExtractor(SentimentExtractor):
             self.excitement_keywords = keywords['Excitement']
             self.anxiety_keywords = keywords['Anxiety']
 
-    def apply(self, text, count_method='count', net_method='ratio'):
+    def apply(self, text, count_method='count', net_method='difference'):
+        text_len=len(text)
         emotion_count = {'anxiety': 0, 'excitement': 0, 'net': 0}
         emotion_count['anxiety'] += countKeywords(
             text, self.anxiety_keywords, method=count_method)
@@ -56,7 +57,7 @@ class KeywordSentimentExtractor(SentimentExtractor):
             text, self.excitement_keywords, method=count_method)
         emotion_count['net'] = netSentiment(emotion_count['anxiety'],
                                             emotion_count['excitement'],
-                                            method=net_method)
+                                            method=net_method,text_len=text_len)
         return emotion_count
 
     def update(self, *args, **kwargs):
@@ -77,16 +78,21 @@ def countKeywords(text, keywords, method="count"):
         return count
 
 
-def netSentiment(anxiety, excitement, method="difference"):
-    if method == " difference":
+def netSentiment(anxiety, excitement, method="difference", text_len=None):
+    if method == "difference":
         """hoe many more excitement words than there are anxiety words"""
-        return excitement - anxiety
+        try:
+            return (excitement - anxiety)/text_len
+        except ZeroDivisionError:
+            return 0.0
+        except TypeError:
+            print("need to pass the length of the text to netSentiment")
     elif method == "ratio":
         """the ratio of excitement words to anxiety words"""
         try:
             return float(excitement) / float(anxiety)
         except ZeroDivisionError:
-            epsilon = 0.0000001
+            epsilon = 1
             ex_eps = excitement + epsilon
             an_eps = anxiety + epsilon
             return ex_eps / an_eps
