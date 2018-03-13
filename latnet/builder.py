@@ -28,9 +28,9 @@ class Builder(object):
 
     def process(self, in_data, agent_manager,
                 agent_field_name=None, text_field_name='content',
-                decode=True, lower=True):
+                decode=True, lower=True, update_chunksize=1000):
         """Iterate through the data, identify the agents and update their attributes based on the contents of the texts"""
-        for item in in_data:
+        for i,item in enumerate(in_data):
             text = item[text_field_name]
 
             if decode:
@@ -53,5 +53,6 @@ class Builder(object):
             else:
                 agent = agent_manager.makeAgent(agent_identifier)
                 agent_manager.addAgent(agent)
-
-            agent.update(**out_data)
+            if not (i%update_chunksize):
+                agent.update(**out_data)
+        agent.update(**out_data) #updating with the remaining articles
