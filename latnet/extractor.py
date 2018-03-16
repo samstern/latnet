@@ -125,11 +125,12 @@ class TopicExtractor(Extractor):
 class LDAExtractor(TopicExtractor):
     """docstring for LDAExtractor"""
     def __init__(self, num_topics=50, eta=0.0001,
-                 bigram_mode=False, dictionary=None):
+                 bigram_mode=False, dictionary=None,remove_stopwords=False):
         super(LDAExtractor, self).__init__()
         self.num_topics = num_topics
         self.bigram_mode = bigram_mode
         self.eta = eta
+        self.remove_stopwords=remove_stopwords
         if self.bigram_mode:
             self.bigram = models.phrases.Phrases()
 
@@ -137,6 +138,7 @@ class LDAExtractor(TopicExtractor):
         self.stemmer = SnowballStemmer("english")
 
         self.stopless = []
+        self.corpus = []
         if dictionary is None:
             self.dictionary = corpora.Dictionary()
 
@@ -150,18 +152,25 @@ class LDAExtractor(TopicExtractor):
 
     def apply(self, text):
         tokenized = self.tokenizer.tokenize(text)
-        ex_stopwords = [token for token in tokenized
-                        if token not in stopwords.words('english')]
-        self.stopless.append(ex_stopwords)
+        if self.remove_stopwords:
+            tokenized = [token for token in tokenized
+                            if token not in stopwords.words('english')]
+    #        self.stopless.append(tokenized)
 
         try:
-            doc_bow = self.dictionary.doc2bow(ex_stopwords)
+            doc_bow = self.dictionary.doc2bow(tokenized)
+            if self.bigram_mode:
+                self.bigram.add_vocab(tokenized)
+                self.corpus.append(self.dictionary.doc2bow(self.bigram[tokenized]))
+            else:
+                self.corpus.append(self.dictionary.doc2bow(tokenized))
             document_topics = self.lda_model.get_document_topics(doc_bow)
             return document_topics
         except AttributeError:
             return None
 
     def update(self):
+        '''
         if self.bigram_mode:
             # bigram=models.phrases.Phrases(self.stopless)
             self.bigram.add_vocab(self.stopless)
@@ -173,16 +182,21 @@ class LDAExtractor(TopicExtractor):
             corpus = [self.dictionary.doc2bow(text) for text in self.stopless]
         # dictionary = corpora.Dictionary(bigram[self.stopless])
         # corpus = [dictionary.doc2bow(text) for text in bigram[self.stopless]]
+        '''
         try:
-            self.lda_model.update(corpus)
+            self.lda_model.update(self.corpus)
         except AttributeError:
             # num_tokens = len(self.dictionary.token2id)
             # etas = np.full([self.num_topics, num_tokens], self.eta)
             self.lda_model = models.ldamulticore.LdaMulticore(
-                corpus=corpus, id2word=self.dictionary,
+                corpus=self.corpus, id2word=self.dictionary,
                 num_topics=self.num_topics) #, alpha='auto',
                 # eta='auto', passes=5)
-        self.resetStopless()
+#        self.resetStopless()
+        self.resetCorpus()
 
     def resetStopless(self):
         self.stopless = []
+
+    def resetCorpus(self):
+        self.corpus = []
