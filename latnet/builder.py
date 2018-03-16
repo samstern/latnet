@@ -26,6 +26,7 @@ class Builder(object):
         for extractor in self.extractors:
             extractor.save(dir_name)
 
+
     def process(self, in_data, agent_manager,
                 agent_field_name=None, text_field_name='content',
                 decode=True, lower=True, update_chunksize=1000):
@@ -53,6 +54,7 @@ class Builder(object):
             else:
                 agent = agent_manager.makeAgent(agent_identifier)
                 agent_manager.addAgent(agent)
-            if not (i%update_chunksize):
-                agent.update(**out_data)
-        agent.update(**out_data) #updating with the remaining articles
+            agent.update(**out_data) #updating with the remaining articles
+            if not i%update_chunksize:
+                self.updateExtractors()
+        self.updateExtractors()
