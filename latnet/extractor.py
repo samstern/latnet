@@ -177,7 +177,7 @@ class LDAExtractor(TopicExtractor):
         except AttributeError:
             return None
 
-    def update(self):
+    def update(self,passes=5,iterations=100):
         '''
         if self.bigram_mode:
             # bigram=models.phrases.Phrases(self.stopless)
@@ -198,7 +198,7 @@ class LDAExtractor(TopicExtractor):
             # etas = np.full([self.num_topics, num_tokens], self.eta)
             self.lda_model = models.ldamulticore.LdaMulticore(
                 corpus=self.corpus, id2word=self.dictionary,
-                num_topics=self.num_topics) #, alpha='auto',
+                num_topics=self.num_topics,passes=passes,iterations=iterations) #, alpha='auto',
                 # eta='auto', passes=5)
 #        self.resetStopless()
         self.resetCorpus()
