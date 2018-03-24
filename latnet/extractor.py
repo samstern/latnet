@@ -150,6 +150,14 @@ class LDAExtractor(TopicExtractor):
     def save(self,dir_name):
         self.lda_model.save(dir_name+'lda_model')
 
+    @classmethod
+    def load_lda_model(cls,lda_file):
+        cls=cls()
+        cls.lda_model=models.ldamulticore.LdaMulticore.load(lda_file)
+        cls.dictionary=cls.lda_model.id2word
+        cls.num_topics=cls.lda_model.num_topics
+        return cls
+
     def apply(self, text):
         tokenized = self.tokenizer.tokenize(text)
         if self.remove_stopwords:
