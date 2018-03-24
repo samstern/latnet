@@ -21,6 +21,9 @@ class Loader(object):
     def __iter__(self):
         return self
 
+    def __len__(self):
+        return self.cur.rowcount
+
     def __next__(self):
         out = self.cur.fetchone()
         if out is None:
