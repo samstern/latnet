@@ -43,11 +43,18 @@ class TopicSentimentAgent(Agent):
         else:
             raise ValueError('topic_sentiment must be of type dict')
 
-    def update(self, topic, sentiment):
+    def update(self, topic, sentiment,topic_prob_weighted=True):
         if topic is not None:
             net_sentiment = sentiment['net']
-            for topic_id, topic_probability in topic:
-                self.topic_sentiment[topic_id] += net_sentiment * topic_probability
+            if topic_prob_weighted:
+                for topic_id, topic_probability in topic:
+                    self.topic_sentiment[topic_id] += net_sentiment * topic_probability
+            else:
+                topics, topic_probability = zip(*topic)
+                topic_index=topic_probability.index(max(topic_probability))
+                topic_id = topics[topic_index]
+                self.topic_sentiment[topic_id] += net_sentiment
+
 
     def getTopics(self, topic_strength_threshold):
         out = {key: val for key, val in
