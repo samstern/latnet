@@ -56,3 +56,6 @@ class TopicSentimentAgent(Agent):
 
     def toNetworkXFormat(self):
         return (self.identifier, self.topic_sentiment)
+
+    def reset(self):
+        self.topic_sentiment=defaultdict(float)

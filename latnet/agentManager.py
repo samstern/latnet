@@ -30,6 +30,10 @@ class AgentManager(object):
         self.names[identifier] = agent
         self.agents.add(agent)
 
+    def resetAgents(self):
+        for agent in self.agents:
+            agent.reset()
+
     def makeAgent(self,identifier, *args, **kwargs):
         agent = self.agent_type(identifier, *args, **kwargs)
         return agent
