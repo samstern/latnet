@@ -75,14 +75,14 @@ def countKeywords(text, keywords, method="count"):
         else:
             raise ValueError("invalid argument for the 'method' parameter. \
                 Valid methods are 'count' and 'exists'.")
-        return count
+    return count
 
 
 def netSentiment(anxiety, excitement, method="difference", text_len=None):
     if method == "difference":
         """hoe many more excitement words than there are anxiety words"""
         try:
-            return (excitement - anxiety)/text_len
+            return float(excitement - anxiety)/text_len
         except ZeroDivisionError:
             return 0.0
         except TypeError:
