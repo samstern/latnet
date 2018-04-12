@@ -1,5 +1,5 @@
 from collections import defaultdict
-from fun import set_default
+from latnet.fun import set_default
 from itertools import combinations
 import json
 
