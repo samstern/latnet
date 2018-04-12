@@ -58,7 +58,7 @@ class TopicSentimentAgent(Agent):
 
     def getTopics(self, topic_strength_threshold):
         out = {key: val for key, val in
-               self.topic_sentiment.iteritems() if abs(val) > topic_strength_threshold}
+               self.topic_sentiment.items() if abs(val) > topic_strength_threshold}
         return out
 
     def toNetworkXFormat(self):
